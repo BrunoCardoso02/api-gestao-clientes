@@ -10,8 +10,9 @@ namespace ClientAPI.Domain.Entities
         public string Email { get; private set; }
         public string CPF { get; private set; }
         public string RG { get; private set; }
-        public List<Contato> Contatos { get; private set; }
-        public List<Endereco> Enderecos { get; private set; }
+        public List<Contato> Contatos { get; set; } = new List<Contato>();
+        public List<Endereco> Enderecos { get; set; } = new List<Endereco>();
+
 
         public Cliente(int id, string nome, string email, string cpf, string rg)
         {
