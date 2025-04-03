@@ -3,7 +3,7 @@
 API RESTful desenvolvida em .NET Core para gerenciamento de clientes, utilizando boas práticas como SOLID e injeção de dependência.
 
 ## 🚀 Tecnologias Utilizadas
-- .NET Core 6+
+- .NET Core 7.0
 - C#
 - JSON (simulando banco de dados)
 - Injeção de Dependência
