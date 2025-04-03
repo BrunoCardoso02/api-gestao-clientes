@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ClientAPI.Domain.Entities;
 
-namespace ClientAPI.Domain.Interfaces
+namespace ClientAPI.Infra.Interfaces
 {
     public interface IClienteRepository
     {

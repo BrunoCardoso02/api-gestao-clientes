@@ -1,9 +1,10 @@
 ﻿using ClientAPI.Application.Interfaces;
 using ClientAPI.DTOs;
 using ClientAPI.Domain.Entities;
-using ClientAPI.Domain.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using ClientAPI.Application.Validators;
+using ClientAPI.Infra.Interfaces;
 
 namespace ClientAPI.Application.Services
 {
@@ -57,25 +58,52 @@ namespace ClientAPI.Application.Services
                     Referencia = e.Referencia
                 }).ToList()
             });
-
         }
 
         public ClienteDTO CreateClient(ClienteDTO clienteDTO)
         {
+         var existingClient = _clienteRepository.GetAllClients()
+            .FirstOrDefault(c => c.Email == clienteDTO.Email || c.RG == clienteDTO.RG || c.CPF == clienteDTO.CPF);
+            if (existingClient != null)
+                return null;
+
+            if (!ValidarCliente(clienteDTO))
+                return null;
+
+            var enderecoErrors = EnderecoValidator.Validate(clienteDTO.Enderecos);
+            if (enderecoErrors.Any())
+            {
+                return null;
+            }
+
             var clients = _clienteRepository.GetAllClients();
+
             int newId = clients.Any() ? clients.Max(c => c.Id) + 1 : 1;
+
+            int maxContatoId = clients.SelectMany(c => c.Contatos).DefaultIfEmpty().Max(c => c?.Id ?? 0);
+            int maxEnderecoId = clients.SelectMany(c => c.Enderecos).DefaultIfEmpty().Max(e => e?.Id ?? 0);
+
+            var enderecos = clienteDTO.Enderecos?.Select((e, index) => new Endereco(
+                maxEnderecoId + index + 1,
+                e.Tipo, e.CEP, e.Logradouro, e.Numero, e.Bairro, e.Cidade, e.Estado
+            )).ToList() ?? new List<Endereco>();
+
+            var contatos = clienteDTO.Contatos?.Select((c, index) => new Contato(
+                maxContatoId + index + 1,
+                c.Tipo, c.DDD, c.Telefone
+            )).ToList() ?? new List<Contato>();
 
             var cliente = new Cliente(newId, clienteDTO.Nome, clienteDTO.Email, clienteDTO.CPF, clienteDTO.RG)
             {
-                Enderecos = clienteDTO.Enderecos?.Select(e => new Endereco(0, e.Tipo, e.CEP, e.Logradouro, e.Numero, e.Bairro, e.Cidade, e.Estado)).ToList() ?? new List<Endereco>(),
-                Contatos = clienteDTO.Contatos?.Select(c => new Contato(0, c.Tipo, c.DDD, c.Telefone)).ToList() ?? new List<Contato>()
+                Enderecos = enderecos,
+                Contatos = contatos
             };
 
             _clienteRepository.AddClient(cliente);
 
             return new ClienteDTO
             {
-                Id = cliente.Id, 
+                Id = cliente.Id,
                 Nome = cliente.Nome,
                 Email = cliente.Email,
                 CPF = cliente.CPF,
@@ -85,6 +113,12 @@ namespace ClientAPI.Application.Services
             };
         }
 
+        private bool ValidarCliente(ClienteDTO clienteDTO)
+        {
+            return ClienteValidator.IsValidEmail(clienteDTO.Email) &&
+                   ClienteValidator.IsValidCPF(clienteDTO.CPF) &&
+                   ClienteValidator.IsValidRG(clienteDTO.RG);
+        }
 
         public ClienteDTO? GetClientById(int id)
         {
@@ -104,15 +138,28 @@ namespace ClientAPI.Application.Services
             var client = _clienteRepository.GetClientById(id);
             if (client == null) return null;
 
+            if (!ValidarCliente(clienteDTO))
+                return null;
+
+            var enderecoErrors = EnderecoValidator.Validate(clienteDTO.Enderecos);
+            if (enderecoErrors.Any())
+            {
+                return null; 
+            }
+
             client.AtualizarDados(clienteDTO.Nome, clienteDTO.Email);
 
             _clienteRepository.UpdateClient(client);
 
             return new ClienteDTO
             {
+                Id = client.Id,
                 Nome = client.Nome,
                 Email = client.Email,
-                CPF = client.CPF
+                CPF = client.CPF,
+                RG = client.RG,
+                Contatos = client.Contatos.Select(c => new ContatoDTO { Id = c.Id, Tipo = c.Tipo, DDD = c.DDD, Telefone = c.Telefone }).ToList(),
+                Enderecos = client.Enderecos.Select(e => new EnderecoDTO { Id = e.Id, Tipo = e.Tipo, CEP = e.CEP, Logradouro = e.Logradouro, Numero = e.Numero, Bairro = e.Bairro, Complemento = e.Complemento, Cidade = e.Cidade, Estado = e.Estado, Referencia = e.Referencia }).ToList()
             };
         }
 

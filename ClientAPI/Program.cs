@@ -1,6 +1,6 @@
 using ClientAPI.Application.Interfaces;
 using ClientAPI.Application.Services;
-using ClientAPI.Domain.Interfaces;
+using ClientAPI.Infra.Interfaces;
 using ClientAPI.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

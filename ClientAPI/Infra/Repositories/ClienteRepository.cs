@@ -1,5 +1,5 @@
 ﻿using ClientAPI.Domain.Entities;
-using ClientAPI.Domain.Interfaces;
+using ClientAPI.Infra.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;

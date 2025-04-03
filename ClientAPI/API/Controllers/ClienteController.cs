@@ -41,18 +41,29 @@ namespace ClientAPI.API.Controllers
         public ActionResult<ClienteDTO> CreateClient([FromBody] ClienteDTO clienteDTO)
         {
             var client = _clienteService.CreateClient(clienteDTO);
-            return CreatedAtAction(nameof(GetClientById), new { id = client.CPF }, client);
+
+            if (client == null)
+                return BadRequest("Dados inválidos! Verifique os campos e tente novamente.");
+
+            return CreatedAtAction(nameof(GetClientById), new { id = client.Id }, client);
         }
+
 
         [HttpPut("atualizar/{id}")]
         public ActionResult<ClienteDTO> UpdateClient(int id, [FromBody] ClienteDTO clienteDTO)
         {
-            var updatedClient = _clienteService.UpdateClient(id, clienteDTO);
-            if (updatedClient == null)
+            var existingClient = _clienteService.GetClientById(id);
+            if (existingClient == null)
                 return NotFound("Cliente não encontrado.");
+
+            var updatedClient = _clienteService.UpdateClient(id, clienteDTO);
+
+            if (updatedClient == null)
+                return BadRequest("Dados inválidos! Verifique os campos e tente novamente.");
 
             return Ok(updatedClient);
         }
+
 
         [HttpDelete("deletar/{id}")]
         public ActionResult DeleteClient(int id)
