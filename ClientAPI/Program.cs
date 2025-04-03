@@ -1,15 +1,18 @@
-using ClientAPI.Repositories;
+using ClientAPI.Application.Interfaces;
+using ClientAPI.Application.Services;
+using ClientAPI.Domain.Interfaces;
+using ClientAPI.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ClientRepository>();
+// Registro da injeção de dependência
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>(); 
 
 var app = builder.Build();
 
@@ -21,9 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

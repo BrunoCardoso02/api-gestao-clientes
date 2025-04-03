@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace ClientAPI.Models
+﻿namespace ClientAPI.DTOs
 {
-    public class Endereco
+    public class EnderecoDTO
     {
-        public int Id { get; set; }
-        public string Tipo { get; set; }  
-        public string CEP { get; set; }  
+        public string Tipo { get; set; }
+        public string CEP { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }
         public string Bairro { get; set; }
