@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "Nome": "Bernardo Silva",
+    "Email": "jbernardosilva@email6.com",
+    "CPF": "123.456.789-12",
+    "RG": "12.345.674-5",
+    "Contatos": [
+      {
+        "Id": 1,
+        "Tipo": "Celular",
+        "DDD": 11,
+        "Telefone": 987654321.0
+      },
+      {
+        "Id": 2,
+        "Tipo": "Residencial",
+        "DDD": 11,
+        "Telefone": 34567890.0
+      }
+    ],
+    "Enderecos": [
+      {
+        "Id": 1,
+        "Tipo": "Residencial",
+        "CEP": "12345-678",
+        "Logradouro": "Rua das Flores",
+        "Numero": 123,
+        "Bairro": "Centro",
+        "Complemento": "Apto 45",
+        "Cidade": "São Paulo",
+        "Estado": "SP",
+        "Referencia": "Próximo ao mercado"
+      }
+    ]
+  }
+]
