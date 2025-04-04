@@ -3,7 +3,7 @@
 API RESTful desenvolvida em .NET Core para gerenciamento de clientes, utilizando boas práticas como SOLID e injeção de dependência.
 
 ## 🚀 Tecnologias Utilizadas
-- .NET 7.0
+- .NET Core 3.1
 - C#
 - JSON (simulando banco de dados)
 - Injeção de Dependência
@@ -13,5 +13,5 @@ API RESTful desenvolvida em .NET Core para gerenciamento de clientes, utilizando
 
 ### 1️⃣ Clone o repositório:
 ```sh
-git clone https://github.com/seu-usuario/api-clientes-dotnet.git
-cd api-clientes-dotnet
+git clone https://github.com/BrunoCardoso02/api-gestao-clientes.git
+cd ClientAPI
